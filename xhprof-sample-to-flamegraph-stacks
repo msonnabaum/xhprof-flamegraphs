@@ -1,0 +1,47 @@
+#!/usr/bin/env php
+<?php
+
+function xhprof_get_args($argv) {
+  array_shift($argv);
+  return array_values(
+    array_filter($argv, function($arg) {
+      return strpos($arg, "-") !== 0;
+    })
+  );
+}
+
+$args = xhprof_get_args($argv);
+$file = $args[0];
+if (is_dir($file)) {
+  $dir = $file;
+  $files = glob("{$dir}/*.sample_xhprof") + glob("{$dir}/*.sample_xhprof.gz");
+}
+else {
+  $files = array($file);
+}
+
+$stacks = array();
+
+foreach ($files as $file) {
+  if (!file_exists($file)) throw new RuntimeException("$file doesn't exist!");
+  preg_match("/^(?<run>[^.]+)\.(?<namespace>.*)(?:\.(?<ext>sample_xhprof)?(\.gz)?)$/", basename($file), $matches);
+  $run_id = $matches['run'];
+
+  $file = strpos($file, 'gz') === (strlen($file) - 2) ? "compress.zlib://$file" : $file;
+
+  $raw_xhprof = @unserialize(file_get_contents($file));
+
+  if ($raw_xhprof === FALSE || empty($raw_xhprof)) {
+    continue;
+  }
+
+  foreach ($raw_xhprof as $stack) {
+    $stack_key = implode(";", explode("==>", $stack));
+    if (!isset($stacks[$stack_key])) $stacks[$stack_key] = 0;
+    $stacks[$stack_key]++;
+  }
+}
+
+foreach ($stacks as $stack => $count) {
+  print "$stack $count" . PHP_EOL;
+}
