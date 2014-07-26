@@ -24,8 +24,6 @@ $stacks = array();
 
 foreach ($files as $file) {
   if (!file_exists($file)) throw new RuntimeException("$file doesn't exist!");
-  preg_match("/^(?<run>[^.]+)\.(?<namespace>.*)(?:\.(?<ext>sample_xhprof)?(\.gz)?)$/", basename($file), $matches);
-  $run_id = $matches['run'];
 
   $file = strpos($file, 'gz') === (strlen($file) - 2) ? "compress.zlib://$file" : $file;
 
