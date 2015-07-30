@@ -17,7 +17,7 @@ if (is_dir($file)) {
   $files = glob("{$dir}/*.sample_xhprof") + glob("{$dir}/*.sample_xhprof.gz");
 }
 else {
-  $files = array($file);
+  $files = $args;
 }
 
 $stacks = array();
