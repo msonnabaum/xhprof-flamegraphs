@@ -14,7 +14,7 @@ $args = xhprof_get_args($argv);
 $file = $args[0];
 if (is_dir($file)) {
   $dir = $file;
-  $files = glob("{$dir}/*.sample_xhprof") + glob("{$dir}/*.sample_xhprof.gz");
+  $files = glob("{$dir}/*.xhprof") + glob("{$dir}/*.sample.gz");
 }
 else {
   $files = array($file);
