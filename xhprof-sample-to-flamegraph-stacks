@@ -40,5 +40,5 @@ foreach ($files as $file) {
 }
 
 foreach ($stacks as $stack => $count) {
-  print strtr("$stack $count", array("\r" => " ", "\n" => " ")) . PHP_EOL;
+  print strtr("$stack $count", array("\r" => " ", "\n" => " ")) . "\n";
 }
