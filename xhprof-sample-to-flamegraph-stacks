@@ -4,7 +4,7 @@
 function xhprof_get_args($argv) {
   array_shift($argv);
   return array_values(
-    array_filter($argv, function($arg) {
+    array_filter($argv, function ($arg) {
       return strpos($arg, "-") !== 0;
     })
   );
@@ -15,8 +15,7 @@ $file = $args[0];
 if (is_dir($file)) {
   $dir = $file;
   $files = glob("{$dir}/*.sample_xhprof") + glob("{$dir}/*.sample_xhprof.gz");
-}
-else {
+} else {
   $files = array($file);
 }
 
@@ -41,5 +40,5 @@ foreach ($files as $file) {
 }
 
 foreach ($stacks as $stack => $count) {
-  print "$stack $count" . PHP_EOL;
+  print strtr("$stack $count", array("\r" => " ", "\n" => " ")) . "\n";
 }
